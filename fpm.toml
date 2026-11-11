@@ -1,0 +1,295 @@
+name = "constituf"
+version = "VERSION"
+description = "Scientific constitutive modeling in modern Fortran"
+license = "Apache-2.0"
+author = "Seyed Ali Ghasemi"
+maintainer = "info@gha3mi.com"
+copyright = "Copyright 2026 Seyed Ali Ghasemi"
+homepage = "https://gha3mi.github.io/ConstituF/"
+categories = ["science"]
+keywords = [
+    "fortran",
+    "scientific-computing",
+    "constitutive-modeling",
+    "continuum-mechanics",
+]
+
+[build]
+auto-executables = false
+auto-examples = false
+auto-tests = true
+
+[library]
+source-dir = "src"
+
+[features]
+baseline.gfortran.flags = "-ffree-line-length-none -Wall -Wextra -Wimplicit-interface -Wno-unused-dummy-argument -Wno-integer-division -Werror"
+debug.gfortran.flags = "-O0 -g -fcheck=all -fbacktrace"
+release.gfortran.flags = "-O3"
+
+baseline.ifx.flags = "-warn all -warn errors -standard-semantics -fp-model=precise -diag-disable=5423"
+debug.ifx.flags = "-O0 -g -check all -check noarg_temp_created -traceback -fpe3"
+release.ifx.flags = "-O3"
+
+real32.preprocess.cpp.macros = ["CONSTITUF_REAL32"]
+real128.preprocess.cpp.macros = ["CONSTITUF_REAL128"]
+
+fpe.gfortran.flags = "-finit-real=snan -ffpe-trap=invalid,zero,overflow"
+fpe.ifx.flags = "-init=snan -init=arrays -fpe0"
+
+[profiles]
+default = ["baseline"]
+debug = ["debug"]
+release = ["release"]
+debug-fpe = ["baseline", "debug", "fpe"]
+debug-real32 = ["baseline", "debug", "real32"]
+release-real32 = ["baseline", "release", "real32"]
+debug-real128 = ["baseline", "debug", "real128"]
+release-real128 = ["baseline", "release", "real128"]
+
+[extra.fortitude.check]
+select = ["C", "E", "S"]
+ignore = ["S001", "S901", "S902"]
+
+[extra.ford]
+project = "ConstituF"
+author = "Seyed Ali Ghasemi"
+email = "info@gha3mi.com"
+github = "https://github.com/gha3mi"
+project_github = "https://github.com/gha3mi/ConstituF"
+summary = "Extensible constitutive models and optional analytical sensitivities."
+license = "Apache-2.0"
+year = "2026"
+src_dir = ["src"]
+page_dir = "docs/pages"
+media_dir = "docs/assets"
+favicon = "docs/assets/brand/constituf-favicon.png"
+css = "docs/assets/constituf.css"
+html_template_dir = ["docs/templates"]
+output_dir = "docs/ford"
+graph = true
+show_proc_parent = true
+display = ["public", "protected"]
+source = true
+sort = "permission-alpha"
+
+[[executable]]
+name = "benchmark_annulus"
+source-dir = "benchmark"
+main = "benchmark_annulus_main.f90"
+
+[executable.dependencies]
+forcolormap = { git = "https://github.com/vmagnin/forcolormap.git", tag = "v1.0" }
+
+[[executable]]
+name = "benchmark_cavity3d"
+source-dir = "benchmark"
+main = "benchmark_cavity3d_main.f90"
+
+[executable.dependencies]
+forcolormap = { git = "https://github.com/vmagnin/forcolormap.git", tag = "v1.0" }
+
+[[example]]
+name = "isotropic_elastic"
+source-dir = "example"
+main = "isotropic_elastic.f90"
+
+[[example]]
+name = "neo_hookean"
+source-dir = "example"
+main = "neo_hookean.f90"
+
+[[example]]
+name = "mooney_rivlin"
+source-dir = "example"
+main = "mooney_rivlin.f90"
+
+[[example]]
+name = "gent"
+source-dir = "example"
+main = "gent.f90"
+
+[[example]]
+name = "dielectric_isotropic"
+source-dir = "example"
+main = "dielectric_isotropic.f90"
+
+[[example]]
+name = "dielectric_anisotropic"
+source-dir = "example"
+main = "dielectric_anisotropic.f90"
+
+[[example]]
+name = "dielectric_cubic"
+source-dir = "example"
+main = "dielectric_cubic.f90"
+
+[[example]]
+name = "ohmic_isotropic"
+source-dir = "example"
+main = "ohmic_isotropic.f90"
+
+[[example]]
+name = "ohmic_anisotropic"
+source-dir = "example"
+main = "ohmic_anisotropic.f90"
+
+[[example]]
+name = "darcy_isotropic"
+source-dir = "example"
+main = "darcy_isotropic.f90"
+
+[[example]]
+name = "darcy_forchheimer"
+source-dir = "example"
+main = "darcy_forchheimer.f90"
+
+[[example]]
+name = "darcy_anisotropic"
+source-dir = "example"
+main = "darcy_anisotropic.f90"
+
+[[example]]
+name = "darcy_exponential"
+source-dir = "example"
+main = "darcy_exponential.f90"
+
+[[example]]
+name = "maxwell_shear"
+source-dir = "example"
+main = "maxwell_shear.f90"
+
+[[example]]
+name = "fourier_isotropic"
+source-dir = "example"
+main = "fourier_isotropic.f90"
+
+[[example]]
+name = "fourier_exponential"
+source-dir = "example"
+main = "fourier_exponential.f90"
+
+[[example]]
+name = "fourier_anisotropic"
+source-dir = "example"
+main = "fourier_anisotropic.f90"
+
+[[example]]
+name = "fick_isotropic"
+source-dir = "example"
+main = "fick_isotropic.f90"
+
+[[example]]
+name = "fick_anisotropic"
+source-dir = "example"
+main = "fick_anisotropic.f90"
+
+[[example]]
+name = "j2_plasticity"
+source-dir = "example"
+main = "j2_plasticity.f90"
+
+[[example]]
+name = "orthotropic_elastic"
+source-dir = "example"
+main = "orthotropic_elastic.f90"
+
+[[example]]
+name = "cohesive_mode_i"
+source-dir = "example"
+main = "cohesive_mode_i.f90"
+
+[[example]]
+name = "isotropic_thermoelastic"
+source-dir = "example"
+main = "isotropic_thermoelastic.f90"
+
+[[example]]
+name = "kelvin_voigt"
+source-dir = "example"
+main = "kelvin_voigt.f90"
+
+[[example]]
+name = "yeoh"
+source-dir = "example"
+main = "yeoh.f90"
+
+[[example]]
+name = "ogden"
+source-dir = "example"
+main = "ogden.f90"
+
+[[example]]
+name = "chaboche"
+source-dir = "example"
+main = "chaboche.f90"
+
+[[example]]
+name = "drucker_prager"
+source-dir = "example"
+main = "drucker_prager.f90"
+
+[[example]]
+name = "cohesive_mixed_mode"
+source-dir = "example"
+main = "cohesive_mixed_mode.f90"
+
+[[example]]
+name = "biot_poroelastic"
+source-dir = "example"
+main = "biot_poroelastic.f90"
+
+[[example]]
+name = "plane_elastic"
+source-dir = "example"
+main = "plane_elastic.f90"
+
+[[example]]
+name = "maxwell_multi"
+source-dir = "example"
+main = "maxwell_multi.f90"
+
+[[example]]
+name = "hill_plasticity"
+source-dir = "example"
+main = "hill_plasticity.f90"
+
+[[example]]
+name = "j2_plane"
+source-dir = "example"
+main = "j2_plane.f90"
+
+[[example]]
+name = "perzyna"
+source-dir = "example"
+main = "perzyna.f90"
+
+[[example]]
+name = "axisymmetric_elastic"
+source-dir = "example"
+main = "axisymmetric_elastic.f90"
+
+[[example]]
+name = "piezoelectric_linear"
+source-dir = "example"
+main = "piezoelectric_linear.f90"
+
+[[example]]
+name = "fiber_hgo"
+source-dir = "example"
+main = "fiber_hgo.f90"
+
+[[example]]
+name = "calibrate_elastic"
+source-dir = "example"
+main = "calibrate_elastic.f90"
+
+[[example]]
+name = "ductile_damage"
+source-dir = "example"
+main = "ductile_damage.f90"
+
+[[example]]
+name = "axisymmetric_j2"
+source-dir = "example"
+main = "axisymmetric_j2.f90"

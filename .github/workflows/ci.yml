@@ -1,0 +1,112 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: prefix-dev/setup-pixi@v0.11.2
+        with:
+          pixi-version: v0.82.0
+      - run: pixi run lint
+
+  test:
+    name: test (${{ matrix.os }}, ${{ matrix.compiler }}, ${{ matrix.profile }})
+    runs-on: ${{ matrix.os }}
+    env:
+      OMP_NUM_THREADS: "1"
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        compiler: [gnu, intel]
+        profile: [debug, debug-real32, debug-real128]
+        exclude:
+          - {os: macos-latest, compiler: intel}
+          - {os: windows-latest, compiler: intel}
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: prefix-dev/setup-pixi@v0.11.2
+        with:
+          pixi-version: v0.82.0
+      - name: Tests
+        run: pixi run -e ${{ matrix.compiler }} fpm test --profile ${{ matrix.profile }}
+
+  examples:
+    name: examples (${{ matrix.os }}, ${{ matrix.compiler }})
+    runs-on: ${{ matrix.os }}
+    env:
+      OMP_NUM_THREADS: "1"
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        compiler: [gnu, intel]
+        exclude:
+          - {os: macos-latest, compiler: intel}
+          - {os: windows-latest, compiler: intel}
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: prefix-dev/setup-pixi@v0.11.2
+        with:
+          pixi-version: v0.82.0
+      - run: pixi run -e ${{ matrix.compiler }} example
+
+  benchmarks:
+    name: benchmarks (${{ matrix.os }}, ${{ matrix.compiler }})
+    runs-on: ${{ matrix.os }}
+    env:
+      OMP_NUM_THREADS: "1"
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        compiler: [gnu, intel]
+        exclude:
+          - {os: macos-latest, compiler: intel}
+          - {os: windows-latest, compiler: intel}
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: prefix-dev/setup-pixi@v0.11.2
+        with:
+          pixi-version: v0.82.0
+      - run: pixi run -e ${{ matrix.compiler }} benchmarks
+
+  docs:
+    name: docs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: prefix-dev/setup-pixi@v0.11.2
+        with:
+          pixi-version: v0.82.0
+      - run: pixi run -e gnu benchmarks
+      - run: pixi run docs
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: docs/ford
+
+  deploy:
+    name: deploy docs
+    if: github.ref == 'refs/heads/main'
+    needs: docs
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

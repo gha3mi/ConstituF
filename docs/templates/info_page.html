@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}{{ page.title }} &ndash; {{ project }}{% endblock title %}
+
+{% macro document_links(pages, page, page_url, project_url) %}
+  {% set current_url = page.url | string %}
+  <nav class="cf-doc-nav" aria-label="Documentation pages">
+    <a href="{{ pages.url | relurl(page_url) }}"{% if pages == page %} aria-current="page"{% endif %}>{{ pages.title }}</a>
+    {% for subpage in pages.subpages recursive %}
+      {% set url = subpage.url | string %}
+      {# Material pages belong in their benchmark's results index, not in the global navigation. #}
+      {% if 'benchmark-' not in url and 'benchmarks.html' not in url %}
+        <a href="{{ subpage.url | relurl(page_url) }}"{% if subpage == page %} aria-current="page"{% endif %}>{{ subpage.title }}</a>
+      {% endif %}
+      {% if subpage.subpages %}{{ loop(subpage.subpages) }}{% endif %}
+    {% endfor %}
+    <div class="cf-doc-nav-benchmarks">
+      <a href="{{ project_url }}/page/benchmarks.html"{% if 'benchmarks.html' in current_url %} aria-current="page"{% endif %}>Benchmarks</a>
+      <a href="{{ project_url }}/page/benchmark-annulus.html"{% if 'benchmark-annulus.html' in current_url %} aria-current="page"{% endif %}>Annulus · formulation</a>
+      <a href="{{ project_url }}/page/benchmark-annulus-results.html"{% if 'benchmark-annulus-results.html' in current_url %} aria-current="page"{% endif %}>Annulus · material results</a>
+      <a href="{{ project_url }}/page/benchmark-cavity3d.html"{% if 'benchmark-cavity3d.html' in current_url %} aria-current="page"{% endif %}>Spherical cavity · formulation</a>
+      <a href="{{ project_url }}/page/benchmark-cavity3d-results.html"{% if 'benchmark-cavity3d-results.html' in current_url %} aria-current="page"{% endif %}>Spherical cavity · material results</a>
+    </div>
+  </nav>
+{% endmacro %}
+
+{% block body %}
+  <header class="cf-document-header">
+    <h1>{{ page.title }}</h1>
+    <div class="cf-page-meta-bar">
+      {% if page.author or page.date %}
+        <div class="cf-meta-tags">
+          {% if page.author %}<span><i class="fa fa-pencil" aria-hidden="true"></i>{{ page.author }}</span>{% endif %}
+          {% if page.date %}<span><i class="fa fa-calendar-o" aria-hidden="true"></i>{{ page.date }}</span>{% endif %}
+        </div>
+      {% endif %}
+      <nav aria-label="Breadcrumb">
+        <ol class="breadcrumb mb-0">
+          {% for item in page.hierarchy %}
+            <li class="breadcrumb-item">{{ item | relurl(page_url) }}</li>
+          {% endfor %}
+          <li class="breadcrumb-item active" aria-current="page">{{ page.title }}</li>
+        </ol>
+      </nav>
+    </div>
+  </header>
+
+  <div class="cf-document-layout{% if pages.subpages %} cf-document-layout-with-nav{% endif %}">
+    {% if pages.subpages %}
+      <aside class="cf-page-desktop-nav" aria-label="Documentation navigation">
+        <div class="cf-page-navigation">{{ document_links(pages, page, page_url, project_url) }}</div>
+      </aside>
+      <div class="cf-page-mobile-nav">
+        <details class="cf-mobile-page-nav">
+          <summary>Browse documentation</summary>
+          {{ document_links(pages, page, page_url, project_url) }}
+        </details>
+      </div>
+    {% endif %}
+
+    <div class="cf-document-content">
+      <nav class="cf-inline-toc" id="cf-inline-toc" aria-label="Page contents" hidden>
+        <details>
+          <summary>On this page</summary>
+          <div class="cf-toc-list"></div>
+        </details>
+      </nav>
+      {# FORD 7 search indexing requires a div with id="text". #}
+      <div id="text">{{ page.contents }}</div>
+    </div>
+
+    <aside class="cf-on-this-page" id="cf-page-toc" aria-label="Page sections" hidden>
+      <p class="cf-toc-heading">On this page</p>
+      <nav class="cf-toc-list" aria-label="Sections on this page"></nav>
+    </aside>
+  </div>
+{% endblock body %}

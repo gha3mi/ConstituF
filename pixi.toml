@@ -1,0 +1,60 @@
+[workspace]
+name = "constituf"
+channels = ["conda-forge"]
+platforms = ["linux-64", "osx-64", "osx-arm64", "win-64"]
+
+[dependencies]
+fpm = ">=0.13.0,<0.14"
+graphviz = ">=12"
+python = ">=3.12,<3.14"
+
+[pypi-dependencies]
+fortitude-lint = "==0.10.1"
+ford = "==7.0.13"
+
+[feature.gnu.dependencies]
+gfortran = ">=16.2.0"
+
+[feature.gnu.activation.env]
+FPM_FC = "gfortran"
+
+[feature.intel]
+platforms = ["linux-64"]
+
+[feature.intel.dependencies]
+ifx_impl_linux-64 = ">=2026.2.0"
+
+[feature.intel.activation.env]
+FPM_FC = "ifx"
+LD_LIBRARY_PATH = "$CONDA_PREFIX/lib"
+
+[environments]
+gnu = { features = ["gnu"] }
+intel = { features = ["intel"] }
+
+[tasks.lint]
+cmd = "fortitude check src test benchmark example"
+description = "Check Fortran source and tests"
+
+[tasks.docs]
+cmd = "ford README.md --revision \"$(cat VERSION)\""
+description = "Generate public API documentation"
+
+[tasks.test]
+cmd = "fpm test --profile debug --target test_*"
+description = "Run unit tests with the selected compiler"
+
+[tasks.example]
+cmd = "fpm run --example --all --profile debug"
+description = "Run all material examples"
+
+[tasks.annulus]
+cmd = "fpm run --target benchmark_annulus --profile debug"
+description = "Evaluate 2D annulus responses and analytical parameter sensitivities"
+
+[tasks.cavity-3d]
+cmd = "fpm run --target benchmark_cavity3d --profile debug"
+description = "Evaluate 3D spherical-cavity responses and analytical parameter sensitivities"
+
+[tasks.benchmarks]
+depends-on = ["annulus", "cavity-3d"]

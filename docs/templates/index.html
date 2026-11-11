@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% block body %}
+  <section class="cf-hero" aria-labelledby="cf-hero-heading">
+    <div class="cf-hero-grid">
+      <div class="cf-hero-copy">
+        <span class="cf-eyebrow"><span class="cf-eyebrow-dot" aria-hidden="true"></span> Constitutive modeling · Fortran</span>
+        <h1 id="cf-hero-heading">Constitutive models.<br><span>Fortran material-point API.</span></h1>
+        <p class="cf-hero-lead">
+          Batched material-point evaluation, with optional algorithmic tangents,
+          analytical parameter sensitivities and committed history.
+        </p>
+        <div class="cf-hero-actions">
+          <a class="cf-button cf-button-primary" href="{{ project_url }}/page/getting-started.html">
+            Getting started <span aria-hidden="true">&rarr;</span>
+          </a>
+          <a class="cf-button cf-button-secondary" href="{{ project_url }}/page/index.html">
+            Browse materials
+          </a>
+        </div>
+        <p class="cf-hero-detail">Solid mechanics <span>·</span> Transport <span>·</span> Electrostatics <span>·</span> Poromechanics</p>
+      </div>
+      <aside class="cf-flow-panel" aria-labelledby="cf-flow-title">
+        <div class="cf-flow-panel-top">
+          <span class="cf-kicker">Material-point workflow</span>
+          <span class="cf-flow-type">material_t</span>
+        </div>
+        <h2 id="cf-flow-title">From fields to response</h2>
+        <ol class="cf-flow-steps">
+          <li>
+            <span class="cf-flow-number" aria-hidden="true">01</span>
+            <div><strong>Bind fields</strong><span>Use each model's declared input and output layout.</span></div>
+          </li>
+          <li>
+            <span class="cf-flow-number" aria-hidden="true">02</span>
+            <div><strong>Evaluate a trial</strong><span>Compute material-point outputs before accepting the step.</span></div>
+          </li>
+          <li>
+            <span class="cf-flow-number" aria-hidden="true">03</span>
+            <div><strong>Accept or revert</strong><span>Manage committed history when the material carries state.</span></div>
+          </li>
+        </ol>
+        <p class="cf-flow-note">Algorithmic tangents and parameter derivatives are optional, model-dependent outputs.</p>
+      </aside>
+    </div>
+  </section>
+
+  <section class="cf-discover" aria-labelledby="cf-discover-heading">
+    <div class="cf-section-heading">
+      <div>
+        <span class="cf-kicker">Documentation</span>
+        <h2 id="cf-discover-heading">Learn, integrate, extend and verify</h2>
+      </div>
+      <p>Find practical guides, model references and the basis for scientific verification.</p>
+    </div>
+    <div class="cf-feature-grid">
+      <a class="cf-feature-card" href="{{ project_url }}/page/getting-started.html">
+        <span class="cf-feature-number">01 / LEARN</span>
+        <span class="cf-feature-title">Getting started <span aria-hidden="true">&nearr;</span></span>
+        <span class="cf-feature-description">Evaluate small-strain elasticity and compare with the analytical stress.</span>
+      </a>
+      <a class="cf-feature-card" href="{{ project_url }}/page/fem-integration.html">
+        <span class="cf-feature-number">02 / APPLY</span>
+        <span class="cf-feature-title">FEM integration <span aria-hidden="true">&nearr;</span></span>
+        <span class="cf-feature-description">Bind fields, evaluate trial states and commit accepted steps.</span>
+      </a>
+      <a class="cf-feature-card" href="{{ project_url }}/page/adding-materials.html">
+        <span class="cf-feature-number">03 / EXTEND</span>
+        <span class="cf-feature-title">Add a material <span aria-hidden="true">&nearr;</span></span>
+        <span class="cf-feature-description">Declare a material law, document its equations and test its response.</span>
+      </a>
+      <a class="cf-feature-card" href="{{ project_url }}/page/verification.html">
+        <span class="cf-feature-number">04 / VERIFY</span>
+        <span class="cf-feature-title">Verification <span aria-hidden="true">&nearr;</span></span>
+        <span class="cf-feature-description">Review numerical checks, benchmarks and their stated scope.</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="cf-overview" aria-labelledby="cf-overview-heading">
+    <div class="cf-section-heading">
+      <div>
+        <span class="cf-kicker">Reference</span>
+        <h2 id="cf-overview-heading">Scope and documentation</h2>
+      </div>
+    </div>
+    <div class="cf-prose" id="text">
+      <p>ConstituF evaluates local constitutive material-point responses in modern
+        Fortran. It provides batched fields, trial/committed history, optional
+        algorithmic tangents and selected analytical parameter sensitivities.
+        It is not a finite-element solver.</p>
+      <p>Choose a model in the
+        <a href="{{ project_url }}/page/index.html">materials catalog</a>,
+        then consult the <a href="{{ project_url }}/page/conventions.html">conventions</a>
+        for tensor packing, units and derivative semantics. The
+        <a href="{{ project_url }}/page/public-interface.html">public interface</a>
+        summarizes available operations.</p>
+      <p>For related procedures, consult
+        <a href="{{ project_url }}/page/checkpointing.html">checkpoint and restart</a>,
+        <a href="{{ project_url }}/page/precision.html">working precision</a>
+        and <a href="{{ project_url }}/page/calibration.html">parameter calibration</a>.
+        The API reference is generated directly from the Fortran source.</p>
+      <p>Explore the <a href="{{ project_url }}/page/benchmarks.html">annulus and spherical-cavity benchmarks</a>
+        or review the <a href="{{ project_url }}/page/verification.html">verification methods</a>.</p>
+    </div>
+  </section>
+
+  {% if project.modules %}
+    <section class="cf-reference" aria-labelledby="cf-reference-heading">
+      <div class="cf-reference-heading">
+        <div>
+          <span class="cf-kicker">Source reference</span>
+          <h2 id="cf-reference-heading">Fortran modules</h2>
+        </div>
+        <a class="cf-inline-link" href="{{ project_url }}/lists/modules.html">View all modules <span aria-hidden="true">&rarr;</span></a>
+      </div>
+      <div class="cf-module-grid">
+        {% for mod in (project.modules|sort(attribute='name'))[:8] %}
+          <div class="cf-module-item"><span class="cf-module-icon" aria-hidden="true">f90</span>{{ mod | relurl(page_url) }}</div>
+        {% endfor %}
+      </div>
+    </section>
+  {% endif %}
+{% endblock body %}
