@@ -30,7 +30,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
         compiler: [gnu, intel]
-        profile: [debug, debug-real32, debug-real128]
+        profile: [debug, debug-real32, debug-real128, release]
         exclude:
           - {os: macos-latest, compiler: intel}
           - {os: windows-latest, compiler: intel}

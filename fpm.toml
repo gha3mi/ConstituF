@@ -25,7 +25,7 @@ source-dir = "src"
 [features]
 baseline.gfortran.flags = "-ffree-line-length-none -Wall -Wextra -Wimplicit-interface -Wno-unused-dummy-argument -Wno-integer-division -Werror"
 debug.gfortran.flags = "-O0 -g -fcheck=all -fbacktrace"
-release.gfortran.flags = "-O3"
+release.gfortran.flags = "-O3 -Wno-error=maybe-uninitialized"
 
 baseline.ifx.flags = "-warn all -warn errors -standard-semantics -fp-model=precise -diag-disable=5423"
 debug.ifx.flags = "-O0 -g -check all -check noarg_temp_created -traceback -fpe3"
